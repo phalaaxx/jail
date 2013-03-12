@@ -14,7 +14,7 @@ Install mandatory packages. At the very least we need apache2 and libpam-chroot 
 Fetch jail code and make necessary links.
 
 	cd /opt
-	git clone github.com/phalaaxx/utquery
+	git clone https://github.com/phalaaxx/jail
 	ln -s /opt/jail/jctl /usr/local/bin
 	ln -s /opt/jail/jail /usr/lib/python2.7/dist-packages
 	ln -s /opt/jail/etc/init.d/jail /etc/init.d
