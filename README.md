@@ -48,7 +48,7 @@ This is a simple introduction how to configure and install grsecurity patched ke
 Make sure you have sufficient space in /usr/src for kernel compilation before you proceed with the next step.
 First, download necessary packages.
 
-	aptitude install kernel-package libncurses5-dev grsec2 paxctl
+	aptitude install kernel-package libncurses5-dev gradm2 paxctl
 
 Download grsecurity patch from http://grsecurity.net/download\_stable.php - at the time of writind latest stable version is 2.9.1-3.2.40-201303111844.
 
