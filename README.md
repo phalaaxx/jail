@@ -9,7 +9,7 @@ Installation
 
 Install mandatory packages. At the very least we need git libpam-chroot to install software and confine ssh users to their jails.
 
-	aptitude install gin libpam-chroot
+	aptitude install git libpam-chroot
 
 Fetch jail code and make necessary links.
 
