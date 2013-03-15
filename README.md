@@ -7,9 +7,9 @@ This is a set of tools that can be used to create, enable or disable chroot jail
 Installation
 ------------
 
-Install mandatory packages. At the very least we need apache2 and libpam-chroot to confine ssh users to their jails.
+Install mandatory packages. At the very least we need git libpam-chroot to install software and confine ssh users to their jails.
 
-	aptitude install apache2 libapache2-mod-suphp libapache2-mod-fcgid libapache2-mod-evasive mysql-server libpam-chroot
+	aptitude install gin libpam-chroot
 
 Fetch jail code and make necessary links.
 
@@ -21,7 +21,8 @@ Fetch jail code and make necessary links.
 
 Enable jail init script. This script is used to bind-mount jail directories at boot time and umount them before shutdown.
 
-	update-rc.d enable jail
+	update-rc.d jail defaults
+	update-rc.d jail enable
 
 Make necessary directories.
 
@@ -70,76 +71,83 @@ Configure kernel sources.
 	make menuconfig
 
 Example setup has the following grsecurity options enabled (all options are under Security Options/Grsecurity/Customize Configuration). Options are for custom configuration method.
-* PaX
-  * Enable various PaX features
-  * PaX Control /
-  *   Use ELF program header marking
-  * Non-executable pages /
-  *   Enforce non-executable pages
-  *     Paging based non-executable pages
-  *   Emulate trampolines
-  *   Restrict mprotect()
-  * Address Space Layout Randomization /
-  *   Address Space Layout Randomization
-  *   Randomize kernel stack base
-  *   Randomize user stack base
-  *   Randomize mmap() base
-  * Miscellaneous hardening features /
-  *   Sanitize kernel stack
-  *   Prevent various kernel object reference counter overflows
-  *   Harden heap object copies between kernel and userland
-  *   Prevent various integer overflows in function size parameters
-  *   Generate some entropy during boot
-* Memory Protections
-  * Deny reading/writing to /dev/kmem, /dev/mem, and /dev/port
-  * Disable privileged I/O
-  * Harden BPF JIT against spray attacks
-  * Harden ASLR against information leaks and entropy reduction
-  * Deter exploit bruteforcing
-  * Harden module auto-loading
-  * Hide kernel symbols
-  * Active kernel exploit response
-* Role Based Access Control Options
-* Filesystem Protections
-  * Proc restrictions
-  *   Restrict /proc to user only
-  * Additional restrictions
-  * Linking restrictions
-  * FIFO restrictions
-  * Sysfs/debugfs restriction
-  * Runtime read-only mount protection
-  * Eliminate stat/notify-based device sidechannels
-  * Chroot jail restrictions
-  *   Deny mounts
-  *   Deny double-chroots
-  *   Deny pivot\_root in chroot
-  *   Enforce chdir("/") on all chroots
-  *   Deny (f)chmod +s
-  *   Deny fchdir out of chroot
-  *   Deny mknod
-  *   Deny shmat() out of chroot
-  *   Deny access to abstract AF\_UNIX sockets out of chroot
-  *   Protect outside processes
-  *   Restrict priority changes
-  *   Deny sysctl writes
-  *   Capability restrictions
-* Kernel Auditing
-  * /proc/<pid>/ipaddr support
-* Executable Protections
-  * Dmesg(8) restriction
-  * Deter ptrace-based process snooping
-  * Require read access to ptrace sensitive binaries
-  * Enforce consistent multithreaded privileges
-  * Trusted Path Execution (TPE)
-  *   Partially restrict all non-root users
+
+#### PaX ####
+* Enable various PaX features
+* PaX Control
+  * Use ELF program header marking
+* Non-executable pages
+  * Enforce non-executable pages
+  * Paging based non-executable pages
+  * Emulate trampolines
+  * Restrict mprotect()
+* Address Space Layout Randomization
+  * Address Space Layout Randomization
+  * Randomize kernel stack base
+  * Randomize user stack base
+  * Randomize mmap() base
+* Miscellaneous hardening features
+  * Sanitize kernel stack
+  * Prevent various kernel object reference counter overflows
+  * Harden heap object copies between kernel and userland
+  * Prevent various integer overflows in function size parameters
+  * Generate some entropy during boot
+
+#### Memory Protections ####
+* Deny reading/writing to /dev/kmem, /dev/mem, and /dev/port
+* Disable privileged I/O
+* Harden BPF JIT against spray attacks
+* Harden ASLR against information leaks and entropy reduction
+* Deter exploit bruteforcing
+* Harden module auto-loading
+* Hide kernel symbols
+* Active kernel exploit response
+
+#### Role Based Access Control Options ####
+
+#### Filesystem Protections ####
+* Proc restrictions
+  * Restrict /proc to user only
+* Additional restrictions
+* Linking restrictions
+* FIFO restrictions
+* Sysfs/debugfs restriction
+* Runtime read-only mount protection
+* Eliminate stat/notify-based device sidechannels
+* Chroot jail restrictions
+  * Deny mounts
+  * Deny double-chroots
+  * Deny pivot\_root in chroot
+  * Enforce chdir("/") on all chroots
+  * Deny (f)chmod +s
+  * Deny fchdir out of chroot
+  * Deny mknod
+  * Deny shmat() out of chroot
+  * Deny access to abstract AF\_UNIX sockets out of chroot
+  * Protect outside processes
+  * Restrict priority changes
+  * Deny sysctl writes
+  * Capability restrictions
+
+#### Kernel Auditing ####
+* /proc/<pid>/ipaddr support
+
+#### Executable Protections ####
+* Dmesg(8) restriction
+* Deter ptrace-based process snooping
+* Require read access to ptrace sensitive binaries
+* Enforce consistent multithreaded privileges
+* Trusted Path Execution (TPE)
+  * Partially restrict all non-root users
   * GID for TPE-untrusted users (990)
-* Network Protections
-  * Larger entropy pools
-  * TCP/UDP blackhole and LAST\_ACK DoS prevention
-  * Disable TCP Simultaneous Connect
-  * Socket restrictions
-  *   Deny server sockets to group
-  *   GID to deny server sockets for (990)
+
+#### Network Protections ####
+* Larger entropy pools
+* TCP/UDP blackhole and LAST\_ACK DoS prevention
+* Disable TCP Simultaneous Connect
+* Socket restrictions
+  * Deny server sockets to group
+  * GID to deny server sockets for (990)
 
 Make sure to tune these settings to your liking. These settings may not work for your case.
 Finally compile grsecurity kernel.
@@ -162,6 +170,14 @@ When the new kernel is running it is possible that some updates may fail due to 
 	paxctl -c /usr/sbin/grub-probe
 	paxctl -mpxe /usr/bin/grub-script-check
 	paxctl -mpxe /usr/sbin/grub-probe
+
+
+Apache
+------
+
+Install necessary apache and related packages.
+
+	aptitude install apache2 libapache2-mod-suphp libapache2-mod-fcgid libapache2-mod-evasive mysql-server
 
 
 Patch and compile suexec
