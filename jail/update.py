@@ -15,7 +15,7 @@ def UpdateChroot(group='jail'):
 def UpdateUser(user):
 	JailDirectories = (
 		('/home/{0}',				True,		0750),
-		('/jail/root/{0}',			False,		0750),
+		('/jail/root/{0}',			False,		0755),
 		('/jail/home/{0}',			False,		0750),
 		('/jail/home/{0}/etc',			False,		0755),
 		('/jail/home/{0}/var',			False,		0755),
