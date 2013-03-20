@@ -14,20 +14,20 @@ def UpdateChroot(group='jail'):
 # update jail user directories
 def UpdateUser(user):
 	JailDirectories = (
-		('/home/{0}',				True,		0750),
-		('/jail/root/{0}',			False,		0755),
-		('/jail/home/{0}',			False,		0750),
-		('/jail/home/{0}/etc',			False,		0755),
-		('/jail/home/{0}/var',			False,		0755),
-		('/jail/home/{0}/var/log',		False,		0755),
-		('/jail/home/{0}/var/run',		False,		0755),
-		('/jail/home/{0}/tmp',			False,		1777),
-		('/jail/home/{0}/home',			False,		0755),
-		('/jail/home/{0}/home/{0}',		True,		0750),
-		('/jail/home/{0}/home/{0}/logs',	True,		0755),
-		('/jail/home/{0}/home/{0}/www',		True,		0750),
-		('/jail/home/{0}/home/{0}/mail',	True,		0750),
-		('/var/log/apache2/hosting/{0}',	False,		0750),
+		('/home/{0}',				True,		00750),
+		('/jail/root/{0}',			False,		00755),
+		('/jail/home/{0}',			False,		00750),
+		('/jail/home/{0}/etc',			False,		00755),
+		('/jail/home/{0}/var',			False,		00755),
+		('/jail/home/{0}/var/log',		False,		00755),
+		('/jail/home/{0}/var/run',		False,		00755),
+		('/jail/home/{0}/tmp',			False,		01777),
+		('/jail/home/{0}/home',			False,		00755),
+		('/jail/home/{0}/home/{0}',		True,		00750),
+		('/jail/home/{0}/home/{0}/logs',	True,		00755),
+		('/jail/home/{0}/home/{0}/www',		True,		00750),
+		('/jail/home/{0}/home/{0}/mail',	True,		00750),
+		('/var/log/apache2/hosting/{0}',	False,		00750),
 	)
 
 	# 3. create jail directories
