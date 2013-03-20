@@ -28,9 +28,10 @@ Make necessary directories.
 
 	mkdir -p /jail/{base,root,home}
 
-Create the jail users group.
+Create the jail and tpe groups.
 
 	groupadd -g 990 -r jail
+	groupadd -g 991 -r tpe
 
 Download chroot environment.
 
@@ -139,7 +140,7 @@ Example setup has the following grsecurity options enabled (all options are unde
 * Enforce consistent multithreaded privileges
 * Trusted Path Execution (TPE)
   * Partially restrict all non-root users
-  * GID for TPE-untrusted users (990)
+  * GID for TPE-untrusted users (991)
 
 #### Network Protections ####
 * Larger entropy pools
