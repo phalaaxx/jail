@@ -15,6 +15,7 @@ def UpdateChroot(group='jail'):
 def UpdateUser(user):
 	JailDirectories = (
 		('/home/{0}',				True,		00750),
+		('/jail/backup/{0}',			False,		00750),
 		('/jail/root/{0}',			False,		00755),
 		('/jail/home/{0}',			False,		00750),
 		('/jail/home/{0}/etc',			False,		00755),
@@ -51,23 +52,21 @@ def UpdateUser(user):
 
 	# 5. generate custom passwd file
 	passwd_path = os.path.join('/jail/home', user, 'etc/passwd')
-	if not os.path.exists(passwd_path):
-		userdata = [
-			map(str, x) for x in
-				[pw for pw in map(tuple, pwd.getpwall()) if
-					pw[2] <= 100 or pw[0] == user]]
-		open(passwd_path, 'w').write('\n'.join(map(':'.join, userdata))+'\n')
-		os.chmod(passwd_path, 0644)
+	userdata = [
+		map(str, x) for x in
+			[pw for pw in map(tuple, pwd.getpwall()) if
+				pw[2] <= 100 or pw[0] == user]]
+	open(passwd_path, 'w+').write('\n'.join(map(':'.join, userdata))+'\n')
+	os.chmod(passwd_path, 0644)
 
 	# 6. generate custom group file
 	group_path = os.path.join('/jail/home', user, 'etc/group')
-	if not os.path.exists(group_path):
-		groupdata = [
-			map(str, gr[0:3]) + [','.join(gr[3])] for gr in
-				map(tuple, grp.getgrall()) if
-					gr[2] <= 100 or gr[0] == user or user in gr[3]]
-		open(group_path, 'w').write('\n'.join(map(':'.join, groupdata))+'\n')
-		os.chmod(group_path, 0644)
+	groupdata = [
+		map(str, gr[0:3]) + [','.join(gr[3])] for gr in
+			map(tuple, grp.getgrall()) if
+				gr[2] <= 100 or gr[0] == user or user in gr[3]]
+	open(group_path, 'w+').write('\n'.join(map(':'.join, groupdata))+'\n')
+	os.chmod(group_path, 0644)
 
 
 # update all jail user directories
