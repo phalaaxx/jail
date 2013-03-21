@@ -217,7 +217,7 @@ Patch the code. Edit _support/suexec.c_ file and add the following code before _
 	        exit(303);
 	    }
 
-Edit _debian/rules_ file and change default docroot to _/home_ and defailt userdir to www. Finally commit changes and build package.
+Edit _debian/rules_ file and change default docroot to _/home_ and default userdir to www. Finally commit changes and build package.
 
 	dpkg-source --commit
 	dpkg-buildpackage
