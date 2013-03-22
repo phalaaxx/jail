@@ -28,7 +28,7 @@ Make necessary directories.
 
 	mkdir -p /jail/{base,root,home}
 
-Create the jail and tpe groups.
+Create the jail, jailtpe and jailsocket groups.
 
 	groupadd -g 990 -r jail
 	groupadd -g 991 -r jailtpe
