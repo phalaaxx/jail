@@ -31,7 +31,8 @@ Make necessary directories.
 Create the jail and tpe groups.
 
 	groupadd -g 990 -r jail
-	groupadd -g 991 -r tpe
+	groupadd -g 991 -r jailtpe
+	groupadd -g 992 -r jailsocket
 
 Download chroot environment.
 
@@ -52,7 +53,7 @@ First, download necessary packages.
 
 	aptitude install kernel-package libncurses5-dev gradm2 paxctl
 
-Download grsecurity patch from http://grsecurity.net/download\_stable.php - at the time of writind latest stable version is 2.9.1-3.2.40-201303111844.
+Download grsecurity patch from [http://grsecurity.net/download_stable.php](http://grsecurity.net/download_stable.php) - at the time of writind latest stable version is 2.9.1-3.2.40-201303111844.
 
 	cd /usr/src
 	wget http://grsecurity.net/stable/grsecurity-2.9.1-3.2.40-201303111844.patch
@@ -148,7 +149,7 @@ Example setup has the following grsecurity options enabled (all options are unde
 * Disable TCP Simultaneous Connect
 * Socket restrictions
   * Deny server sockets to group
-  * GID to deny server sockets for (990)
+  * GID to deny server sockets for (992)
 
 Make sure to tune these settings to your liking. These settings may not work for your case.
 Finally compile grsecurity kernel.
