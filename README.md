@@ -53,20 +53,20 @@ First, download necessary packages.
 
 	aptitude install kernel-package libncurses5-dev gradm2 paxctl
 
-Download grsecurity patch from [http://grsecurity.net/download_stable.php](http://grsecurity.net/download_stable.php) - at the time of writind latest stable version is 2.9.1-3.2.40-201303111844.
+Download grsecurity patch from [http://grsecurity.net/download_stable.php](http://grsecurity.net/download_stable.php) - at the time of writing latest stable version is 2.9.1-3.2.46-201306171903.
 
 	cd /usr/src
-	wget http://grsecurity.net/stable/grsecurity-2.9.1-3.2.40-201303111844.patch
+	wget http://grsecurity.net/stable/grsecurity-2.9.1-3.2.46-201306171903.patch
 
 Download and extract appropriate kernel version.
 
-	wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.2.40.tar.xz
+	wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.2.46.tar.xz
 	tar Jxvf linux-3.2.40.tar.xz
 
 Patch kernel sources with grsecurity patch.
 
 	cd linux-3.2.40
-	patch -p1 < ../grsecurity-2.9.1-3.2.40-201303111844.patch
+	patch -p1 < ../grsecurity-2.9.1-3.2.46-201306171903.patch
 
 Configure kernel sources.
 
@@ -165,7 +165,7 @@ At this point the server needs to be restarted. Once it boots make sure that the
 
 	uname -r
 
-If the server was booted into the new kernel. you should see something similar to _3.2.40-grsec_.
+If the server was booted into the new kernel. you should see something similar to _3.2.46-grsec_.
 When the new kernel is running it is possible that some updates may fail due to grsecurity restrictions. The reason is because grub will not be able to update its configuration. In order to resolve this issue, two binaries from grub package need to be given correct permissions.
 
 	paxctl -c /usr/bin/grub-script-check
@@ -244,6 +244,10 @@ In order to start using chroot jails you need some users in the jail group.
 	adduser jtest
 	usermod -aG jail jtest
 	mkdir -p /var/log/apache2/hosting/juser
+
+It is also necessary to add www-data user to the new user's group:
+
+	usermod -aG jtest www-data
 	
 Update and mount jail directories.
 
