@@ -33,6 +33,8 @@ Create the jail, jailtpe and jailsocket groups.
 	groupadd -g 990 -r jail
 	groupadd -g 991 -r jailtpe
 	groupadd -g 992 -r jailsocket
+	groupadd -g 993 -r jailcsocket
+	groupadd -g 994 -r jailssocket
 
 Download chroot environment.
 
@@ -150,6 +152,10 @@ Example setup has the following grsecurity options enabled (all options are unde
 * Socket restrictions
   * Deny server sockets to group
   * GID to deny server sockets for (992)
+  * Deny client sockets to group
+  * GID to deny client sockets for (993)
+  * Deny server sockets to group
+  * GID to deny server sockets for (994)
 
 Make sure to tune these settings to your liking. These settings may not work for your case.
 Finally compile grsecurity kernel.
