@@ -9,7 +9,7 @@ Installation
 
 Install mandatory packages. At the very least we need git libpam-chroot to install software and confine ssh users to their jails.
 
-	aptitude install git libpam-chroot
+	apt-get install git libpam-chroot
 
 Fetch jail code and make necessary links.
 
@@ -36,12 +36,12 @@ Create the jail, jailtpe and jailsocket groups.
 
 Download chroot environment.
 
-	aptitude install debootstrap
+	apt-get install debootstrap
 	debootstrap --arch amd64 precise /jail/base http://archive.ubuntu.com/ubuntu/
 
 Install necessary software within chroot environment, for example:
 
-	chroot /jail/base apt-get install aptitude vim php5-cgi php5-mysql php5-gd
+	chroot /jail/base apt-get install vim php5-cgi php5-mysql php5-gd
 
 
 GRSecurity
@@ -51,22 +51,22 @@ This is a simple introduction how to configure and install grsecurity patched ke
 Make sure you have sufficient space in /usr/src for kernel compilation before you proceed with the next step.
 First, download necessary packages.
 
-	aptitude install kernel-package libncurses5-dev gradm2 paxctl
+	apt-get install kernel-package libncurses5-dev gradm2 paxctl
 
-Download grsecurity patch from [http://grsecurity.net/download_stable.php](http://grsecurity.net/download_stable.php) - at the time of writing latest stable version is 2.9.1-3.2.46-201306171903.
+Download grsecurity patch from [http://grsecurity.net/download_stable.php](http://grsecurity.net/download_stable.php) - at the time of writing latest stable version is 2.9.1-3.2.48-201307181235.
 
 	cd /usr/src
-	wget http://grsecurity.net/stable/grsecurity-2.9.1-3.2.46-201306171903.patch
+	wget http://grsecurity.net/stable/grsecurity-2.9.1-3.2.48-201307181235.patch
 
 Download and extract appropriate kernel version.
 
-	wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.2.46.tar.xz
-	tar Jxvf linux-3.2.40.tar.xz
+	wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.2.48.tar.xz
+	tar Jxvf linux-3.2.48.tar.xz
 
 Patch kernel sources with grsecurity patch.
 
 	cd linux-3.2.40
-	patch -p1 < ../grsecurity-2.9.1-3.2.46-201306171903.patch
+	patch -p1 < ../grsecurity-2.9.1-3.2.48-201307181235.patch
 
 Configure kernel sources.
 
@@ -179,7 +179,7 @@ Apache
 
 Install necessary apache and related packages.
 
-	aptitude install apache2 libapache2-mod-suphp libapache2-mod-fcgid libapache2-mod-evasive mysql-server
+	apt-get install apache2 libapache2-mod-suphp libapache2-mod-fcgid libapache2-mod-evasive mysql-server
 
 
 Patch and compile suexec
@@ -231,7 +231,7 @@ After a while the new packages set will be compiled. Install the appropriate pac
 
 One last thing to do is to prevent package system from updating _apache2-suexec_ package.
 
-	aptitude hold apache2-suexec
+	apt-mark hold apache2-suexec
 
 From now on cgi and fcgi binaries should be started within chroot jail in /jail/root/username directories. Of course, this will only work for mounted jails.
 
