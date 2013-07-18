@@ -67,7 +67,7 @@ Download and extract appropriate kernel version.
 
 Patch kernel sources with grsecurity patch.
 
-	cd linux-3.2.40
+	cd linux-3.2.48
 	patch -p1 < ../grsecurity-2.9.1-3.2.48-201307181235.patch
 
 Configure kernel sources.
