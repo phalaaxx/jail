@@ -53,12 +53,12 @@ This is a simple introduction how to configure and install grsecurity patched ke
 Make sure you have sufficient space in /usr/src for kernel compilation before you proceed with the next step.
 First, download necessary packages.
 
-	apt-get install kernel-package libncurses5-dev gradm2 paxctl
+	apt-get install kernel-package libncurses5-dev paxctl
 
 Download grsecurity patch from [http://grsecurity.net/download_stable.php](http://grsecurity.net/download_stable.php) - at the time of writing latest stable version is 2.9.1-3.2.48-201307181235.
 
 	cd /usr/src
-	wget http://grsecurity.net/stable/grsecurity-2.9.1-3.2.48-201307181235.patch
+	wget http://grsecurity.net/stable/grsecurity-2.9.1-3.2.48-201307212241.patch
 
 Download and extract appropriate kernel version.
 
@@ -68,7 +68,7 @@ Download and extract appropriate kernel version.
 Patch kernel sources with grsecurity patch.
 
 	cd linux-3.2.48
-	patch -p1 < ../grsecurity-2.9.1-3.2.48-201307181235.patch
+	patch -p1 < ../grsecurity-2.9.1-3.2.48-201307212241.patch
 
 Configure kernel sources.
 
@@ -150,8 +150,8 @@ Example setup has the following grsecurity options enabled (all options are unde
 * TCP/UDP blackhole and LAST\_ACK DoS prevention
 * Disable TCP Simultaneous Connect
 * Socket restrictions
-  * Deny server sockets to group
-  * GID to deny server sockets for (992)
+  * Deny any sockets to group
+  * GID to deny all sockets for (992)
   * Deny client sockets to group
   * GID to deny client sockets for (993)
   * Deny server sockets to group
@@ -178,6 +178,23 @@ When the new kernel is running it is possible that some updates may fail due to 
 	paxctl -c /usr/sbin/grub-probe
 	paxctl -mpxe /usr/bin/grub-script-check
 	paxctl -mpxe /usr/sbin/grub-probe
+
+
+gradm2
+------
+
+Download required packages for compilation:
+
+	apt-get install bison flex
+
+Download, compile and install gradm2:
+
+	cd /usr/src
+	wget http://grsecurity.net/stable/gradm-2.9.1-201307031629.tar.gz
+	tar zxf gradm-2.9.1-201307031629.tar.gz
+	cd gradm2
+	make
+	make install
 
 
 Apache
