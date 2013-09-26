@@ -39,7 +39,7 @@ Create the jail, jailtpe and jailsocket groups.
 Download chroot environment.
 
 	apt-get install debootstrap
-	debootstrap --arch amd64 precise /jail/base http://archive.ubuntu.com/ubuntu/
+	debootstrap --arch amd64 wheezy /jail/base http://ftp.debian.org/debian/
 
 Install necessary software within chroot environment, for example:
 
@@ -49,26 +49,26 @@ Install necessary software within chroot environment, for example:
 GRSecurity
 ----------
 
-This is a simple introduction how to configure and install grsecurity patched kernel under ubuntu/debian. This step is optional though it is highly recommended.
+This is a simple introduction how to configure and install grsecurity patched kernel under debian/ubuntu. This step is optional though it is highly recommended.
 Make sure you have sufficient space in /usr/src for kernel compilation before you proceed with the next step.
 First, download necessary packages.
 
 	apt-get install kernel-package libncurses5-dev paxctl
 
-Download grsecurity patch from [http://grsecurity.net/download_stable.php](http://grsecurity.net/download_stable.php) - at the time of writing latest stable version is 2.9.1-3.2.48-201307181235.
+Download grsecurity patch from [http://grsecurity.net/download_stable.php](http://grsecurity.net/download_stable.php) - at the time of writing latest stable version is 2.9.1-3.2.51-201309181906.
 
 	cd /usr/src
-	wget http://grsecurity.net/stable/grsecurity-2.9.1-3.2.48-201307212241.patch
+	wget http://grsecurity.net/stable/grsecurity-2.9.1-3.2.51-201309181906.patch
 
 Download and extract appropriate kernel version.
 
-	wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.2.48.tar.xz
-	tar Jxvf linux-3.2.48.tar.xz
+	wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.2.51.tar.xz
+	tar Jxvf linux-3.2.51.tar.xz
 
 Patch kernel sources with grsecurity patch.
 
-	cd linux-3.2.48
-	patch -p1 < ../grsecurity-2.9.1-3.2.48-201307212241.patch
+	cd linux-3.2.51
+	patch -p1 < ../grsecurity-2.9.1-3.2.51-201309181906.patch
 
 Configure kernel sources.
 
@@ -80,6 +80,7 @@ Example setup has the following grsecurity options enabled (all options are unde
 * Enable various PaX features
 * PaX Control
   * Use ELF program header marking
+  * Use filesystem extended attributes marking
 * Non-executable pages
   * Enforce non-executable pages
   * Paging based non-executable pages
@@ -101,6 +102,8 @@ Example setup has the following grsecurity options enabled (all options are unde
 * Deny reading/writing to /dev/kmem, /dev/mem, and /dev/port
 * Disable privileged I/O
 * Harden BPF JIT against spray attacks
+* Disable unprivileged PERF\_EVENTS usage by default
+* Insert random gaps between thread stacks
 * Harden ASLR against information leaks and entropy reduction
 * Deter exploit bruteforcing
 * Harden module auto-loading
@@ -114,6 +117,8 @@ Example setup has the following grsecurity options enabled (all options are unde
   * Restrict /proc to user only
 * Additional restrictions
 * Linking restrictions
+* Kernel-enforced SymlinksIfOwnerMatch
+  * GID for users with kernel-enforced SymlinksIfOwnerMatch (990)
 * FIFO restrictions
 * Sysfs/debugfs restriction
 * Runtime read-only mount protection
@@ -160,18 +165,18 @@ Example setup has the following grsecurity options enabled (all options are unde
 Make sure to tune these settings to your liking. These settings may not work for your case.
 Finally compile grsecurity kernel.
 
-	make-kpkg --initrd --append-to-version "grsec" --revision 1 kernel_image
+	make-kpkg --initrd --revision 1 kernel_image
 
 Depending on hardware this may take up to severas hours. Once the kernel is ready - install it.
 
 	cd /usr/src
-	dpkg -i linux-image-3.2.40-grsec_1_amd64.deb
+	dpkg -i linux-image-3.2.51-grsec_1_amd64.deb
 
 At this point the server needs to be restarted. Once it boots make sure that the new kernel has been loaded.
 
 	uname -r
 
-If the server was booted into the new kernel. you should see something similar to _3.2.46-grsec_.
+If the server was booted into the new kernel. you should see something similar to _3.2.51-grsec_.
 When the new kernel is running it is possible that some updates may fail due to grsecurity restrictions. The reason is because grub will not be able to update its configuration. In order to resolve this issue, two binaries from grub package need to be given correct permissions.
 
 	paxctl -c /usr/bin/grub-script-check
@@ -190,8 +195,8 @@ Download required packages for compilation:
 Download, compile and install gradm2:
 
 	cd /usr/src
-	wget http://grsecurity.net/stable/gradm-2.9.1-201307031629.tar.gz
-	tar zxf gradm-2.9.1-201307031629.tar.gz
+	wget http://grsecurity.net/stable/gradm-2.9.1-201309161709.tar.gz
+	tar zxf gradm-2.9.1-201309161709.tar.gz
 	cd gradm2
 	make
 	make install
@@ -249,7 +254,7 @@ Edit _debian/rules_ file and change default docroot to _/home_ and default userd
 After a while the new packages set will be compiled. Install the appropriate package and make sure suexec binary is suid.
 
 	cd /usr/src/suexec
-	dpkg -i apache2-suexec_2.2.22-6ubuntu2.1_amd64.deb
+	dpkg -i apache2-suexec_2.2.22-13_amd64.deb
 	chmod +s /usr/lib/apache2/suexec
 
 One last thing to do is to prevent package system from updating _apache2-suexec_ package.
