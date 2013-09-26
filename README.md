@@ -53,7 +53,7 @@ This is a simple introduction how to configure and install grsecurity patched ke
 Make sure you have sufficient space in /usr/src for kernel compilation before you proceed with the next step.
 First, download necessary packages.
 
-	apt-get install kernel-package libncurses5-dev paxctl
+	apt-get install kernel-package libncurses5-dev attr
 
 Download grsecurity patch from [http://grsecurity.net/download_stable.php](http://grsecurity.net/download_stable.php) - at the time of writing latest stable version is 2.9.1-3.2.51-201309181906.
 
@@ -179,10 +179,8 @@ At this point the server needs to be restarted. Once it boots make sure that the
 If the server was booted into the new kernel. you should see something similar to _3.2.51-grsec_.
 When the new kernel is running it is possible that some updates may fail due to grsecurity restrictions. The reason is because grub will not be able to update its configuration. In order to resolve this issue, two binaries from grub package need to be given correct permissions.
 
-	paxctl -c /usr/bin/grub-script-check
-	paxctl -c /usr/sbin/grub-probe
-	paxctl -mpxe /usr/bin/grub-script-check
-	paxctl -mpxe /usr/sbin/grub-probe
+	setfattr -n user.pax.flags -v pme /usr/bin/grub-script-check
+	setfattr -n user.pax.flags -v pme /usr/sbin/grub-probe
 
 
 gradm2
