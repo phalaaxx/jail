@@ -79,7 +79,6 @@ Example setup has the following grsecurity options enabled (all options are unde
 #### PaX ####
 * Enable various PaX features
 * PaX Control
-  * Use ELF program header marking
   * Use filesystem extended attributes marking
 * Non-executable pages
   * Enforce non-executable pages
