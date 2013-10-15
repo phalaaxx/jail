@@ -164,9 +164,10 @@ Example setup has the following grsecurity options enabled (all options are unde
 Make sure to tune these settings to your liking. These settings may not work for your case.
 Finally compile grsecurity kernel.
 
+	export CONCURRENCY_LEVEL=4
 	make-kpkg --initrd --revision 1 kernel_image
 
-Depending on hardware this may take up to severas hours. Once the kernel is ready - install it.
+Depending on hardware this may take up to several hours. Once the kernel is ready - install it.
 
 	cd /usr/src
 	dpkg -i linux-image-3.2.51-grsec_1_amd64.deb
