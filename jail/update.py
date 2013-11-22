@@ -34,7 +34,7 @@ def UpdateUser(user):
 		('/jail/home/{0}/etc',			False,		00755),
 		('/jail/home/{0}/var',			False,		00755),
 		('/jail/home/{0}/var/log',		False,		00755),
-		('/jail/home/{0}/var/run',		False,		00755),
+		('/jail/home/{0}/run',			False,		00755),
 		('/jail/home/{0}/tmp',			False,		01777),
 		('/jail/home/{0}/home',			False,		00755),
 		('/jail/home/{0}/home/{0}',		True,		00750),
@@ -58,7 +58,7 @@ def UpdateUser(user):
 
 	# 4. create empty files
 	for f in (os.path.join('/jail/home', user, 'var/log/wtmp'),
-		os.path.join('/jail/home', user, 'var/run/utmp')):
+		os.path.join('/jail/home', user, 'run/utmp')):
 		if not os.path.exists(f):
 			open(f, 'w').close()
 		os.chmod(f, 0644)

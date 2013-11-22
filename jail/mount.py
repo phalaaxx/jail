@@ -20,7 +20,7 @@ MountPoints = (
 	('/jail/home/{0}/etc/passwd',		'/jail/root/{0}/etc/passwd',		None,	MS_BIND,	None),
 	('/jail/home/{0}/etc/group',		'/jail/root/{0}/etc/group',		None,	MS_BIND,	None),
 	('/jail/home/{0}/var/log/wtmp',		'/jail/root/{0}/var/log/wtmp',		None,	MS_BIND,	None),
-	('/jail/home/{0}/var/run/utmp',		'/jail/root/{0}/var/run/utmp',		None,	MS_BIND,	None),
+	('/jail/home/{0}/run/utmp',		'/jail/root/{0}/run/utmp',		None,	MS_BIND,	None),
 	('/jail/home/{0}/tmp',			'/jail/root/{0}/tmp',			None,	MS_BIND,	None),
 	('/jail/home/{0}/home/{0}',		'/home/{0}',				None,	MS_BIND,	None),
 	('/var/log/apache2/hosting/{0}',	'/jail/root/{0}/home/{0}/logs',		None,	MS_BIND,	None),
