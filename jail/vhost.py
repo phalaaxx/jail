@@ -15,7 +15,7 @@ coVHostEnd      = re.compile('^</VirtualHost>')
 
 # filenames
 fnApacheConf = lambda username: '/etc/apache2/sites-enabled/{0}.conf'.format(username)
-fnDocRoot = lambda x: '/home/{UserName}/www/{ServerName}'.format(**x)
+fnDocRoot = lambda x: '/home/{UserName}/public_html/{ServerName}'.format(**x)
 fnAccessLog = lambda u, s: '/var/log/apache2/hosting/{0}/{1}-access.log'.format(u, s)
 fnErrorLog = lambda u, s: '/var/log/apache2/hosting/{0}/{1}-error.log'.format(u, s)
 
@@ -82,7 +82,7 @@ def Write(vhosts):
 			vhost += '\tServerName {ServerName}\n'
 			for alias in vh['ServerAlias']:
 				vhost += '\tServerAlias {Alias}\n'.format(Alias=alias)
-			vhost += '\tDocumentRoot /home/{UserName}/www/{ServerName}\n'
+			vhost += '\tDocumentRoot /home/{UserName}/public_html/{ServerName}\n'
 			vhost += '\tCustomLog ${{APACHE_LOG_DIR}}/hosting/{UserName}/{ServerName}-access.log combined\n'
 			vhost += '\tErrorLog ${{APACHE_LOG_DIR}}/hosting/{UserName}/{ServerName}-error.log\n'
 			vhost += '</VirtualHost>\n\n'

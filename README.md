@@ -244,7 +244,7 @@ Patch the code. Edit _support/suexec.c_ file and add the following code before _
 	        exit(303);
 	    }
 
-Edit _debian/rules_ file and change default docroot to _/home_ and default userdir to www. Finally commit changes and build package.
+Edit _debian/rules_ file and change default docroot to _/home_. Finally commit changes and build package.
 
 	dpkg-source --commit
 	dpkg-buildpackage
@@ -290,7 +290,7 @@ In order to make virtual hosts confined inside chroot jails, use configuration s
 	<VirtualHost 91.230.230.227:80>
 	        ServerAdmin webmaster@tauservice.eu
 	        ServerName ut.deck17.com
-	        DocumentRoot /home/jtest/www/jtest_vhost_root
+	        DocumentRoot /home/jtest/public_html/jtest_vhost_root
 	        SuexecUserGroup "jtest" "jtest"
 	        LogLevel warn
 	        ErrorLog ${APACHE_LOG_DIR}/hosting/jtest/jtest-error.log

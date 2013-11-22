@@ -39,7 +39,7 @@ def UpdateUser(user):
 		('/jail/home/{0}/home',			False,		00755),
 		('/jail/home/{0}/home/{0}',		True,		00750),
 		('/jail/home/{0}/home/{0}/logs',	True,		00755),
-		('/jail/home/{0}/home/{0}/www',		True,		00750),
+		('/jail/home/{0}/home/{0}/public_html',	True,		00750),
 		('/jail/home/{0}/home/{0}/mail',	True,		00750),
 		('/var/log/apache2/hosting/{0}',	False,		00755),
 	)
