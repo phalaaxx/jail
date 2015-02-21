@@ -205,7 +205,8 @@ Apache
 
 Install necessary apache and related packages.
 
-	apt-get install apache2 libapache2-mod-suphp libapache2-mod-fcgid libapache2-mod-evasive mysql-server
+	apt-get install apache2 libapache2-mod-fcgid libapache2-mod-evasive mysql-server
+	a2enmod userdir
 
 
 Patch and compile suexec
@@ -218,7 +219,7 @@ First fetch sources and build dependencies.
 	cd /usr/src/suexec
 	apt-get source apache2-suexec
 	apt-get build-dep apache2-suexec
-	cd apache2-2.2.22
+	cd apache2-2.4.10
 
 Patch the code. Edit _support/suexec.c_ file and add the following code before _setgid_ and _setuid_.
 
@@ -252,12 +253,12 @@ Edit _debian/rules_ file and change default docroot to _/home_. Finally commit c
 After a while the new packages set will be compiled. Install the appropriate package and make sure suexec binary is suid.
 
 	cd /usr/src/suexec
-	dpkg -i apache2-suexec_2.2.22-13_amd64.deb
-	chmod +s /usr/lib/apache2/suexec
+	dpkg -i apache2-suexec-pristine_2.4.10-9_amd64.deb
+	chmod +s /usr/lib/apache2/suexec-pristine
 
 One last thing to do is to prevent package system from updating _apache2-suexec_ package.
 
-	apt-mark hold apache2-suexec
+	apt-mark hold apache2-suexec-pristine
 
 From now on cgi and fcgi binaries should be started within chroot jail in /jail/root/username directories. Of course, this will only work for mounted jails.
 
@@ -267,18 +268,16 @@ Usage
 
 In order to start using chroot jails you need some users in the jail group.
 
-	adduser jtest
-	usermod -aG jail jtest
-	mkdir -p /var/log/apache2/hosting/juser
+	useradd -G jail -s /bin/bash test@example.com
 
 It is also necessary to add www-data user to the new user's group:
 
-	usermod -aG jtest www-data
+	usermod -aG test@example.com www-data
 	
 Update and mount jail directories.
 
 	jctl --update
-	jctl --mount jtest
+	jctl --mount test@example.com
 	jctl --list
 
 
@@ -287,14 +286,14 @@ Sample vhost
 
 In order to make virtual hosts confined inside chroot jails, use configuration similar to this.
 
-	<VirtualHost 91.230.230.227:80>
-	        ServerAdmin webmaster@tauservice.eu
-	        ServerName ut.deck17.com
-	        DocumentRoot /home/jtest/public_html/jtest_vhost_root
-	        SuexecUserGroup "jtest" "jtest"
+	<VirtualHost *:80>
+	        ServerAdmin webmaster@example.com
+	        ServerName test.example.com
+	        DocumentRoot /home/test@example.com/public_html/jtest_vhost_root
+	        SuexecUserGroup "test@example.com" "test@example.com"
 	        LogLevel warn
-	        ErrorLog ${APACHE_LOG_DIR}/hosting/jtest/jtest-error.log
-	        CustomLog ${APACHE_LOG_DIR}/hosting/jtest/jtest-access.log combined
+	        ErrorLog ${APACHE_LOG_DIR}/error.log
+	        CustomLog ${APACHE_LOG_DIR}/access.log vhost_combined
 	</VirtualHost>
 
 
