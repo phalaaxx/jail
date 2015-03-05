@@ -9,7 +9,7 @@ Installation
 
 Install mandatory packages. At the very least we need git libpam-chroot to install software and confine ssh users to their jails.
 
-	apt-get install git libpam-chroot
+	apt-get install git libpam-chroot debootstrap
 
 Fetch jail code and make necessary links.
 
@@ -38,12 +38,11 @@ Create the jail, jailtpe and jailsocket groups.
 
 Download chroot environment.
 
-	apt-get install debootstrap
-	debootstrap --arch amd64 wheezy /jail/base http://ftp.debian.org/debian/
+	jctl --chroot-setup
 
-Install necessary software within chroot environment, for example:
+Install additional software within chroot environment, for example:
 
-	chroot /jail/base apt-get install vim php5-cgi php5-mysql php5-gd
+	chroot /jail/base apt-get install vim tmux zsh
 
 
 GRSecurity

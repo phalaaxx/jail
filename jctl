@@ -8,6 +8,7 @@ if __name__ == '__main__':
 	from jail import mysql
 	from jail import apache
 	from jail import backup
+	from jail import chroot
 	import argparse
 
 	parser = argparse.ArgumentParser(description='Jail utilities')
@@ -17,6 +18,8 @@ if __name__ == '__main__':
 	parser.add_argument('-m', '--mount', metavar='USER', help='Mount single user jail directories')
 	parser.add_argument('-u', '--umount', metavar='USER', help='Umount single user jail directories')
 	parser.add_argument('-l', '--list', action='store_true', help='List mounted user jails')
+	parser.add_argument('--chroot-setup', action='store_true', help='Setup chroot environment with debootstrap')
+	parser.add_argument('--chroot-upgrade', action='store_true', help='Update and upgrade chroot environment')
 	args = parser.parse_args()
 	if args.update:
 		print 'UpdateGroup()'
@@ -33,5 +36,12 @@ if __name__ == '__main__':
 	elif args.umount:
 		print 'Umount(%s)' % args.umount
 		mount.Umount(args.umount)
+	elif args.chroot_setup:
+		print 'ChrootSetup()'
+		chroot.Setup()
+	elif args.chroot_upgrade:
+		print 'ChrootUpgrade()'
+		chroot.Update()
+		chroot.Upgrade()
 	elif args.list:
 		print '\n'.join(mount.List())
