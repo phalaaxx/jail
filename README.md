@@ -30,18 +30,11 @@ Make necessary directories.
 
 Create the jail, jailtpe and jailsocket groups.
 
-	groupadd -g 990 -r jail
-	groupadd -g 991 -r jailtpe
-	groupadd -g 992 -r jailsocket
-	groupadd -g 993 -r jailcsocket
-	groupadd -g 994 -r jailssocket
+	jctl --groups-setup
 
-Download chroot environment.
+Download chroot environment and install additional software within the chroot environment:
 
 	jctl --chroot-setup
-
-Install additional software within chroot environment, for example:
-
 	chroot /jail/base apt-get install vim tmux zsh
 
 
