@@ -1,10 +1,14 @@
-import os
+from subprocess import call
 
 # graceful restart
 def Graceful():
-	return os.system('/usr/sbin/apache2ctl graceful > /dev/null 2>&1')
+	return call([
+		'/usr/sbin/apache2ctl',
+		'graceful'])
 
 
 # test apache configuration
 def ConfigTest():
-	return os.system('/usr/sbin/apache2ctl configtest > /dev/null 2>&1')
+	return call([
+		'/usr/sbin/apache2ctl',
+		'configtest'])
