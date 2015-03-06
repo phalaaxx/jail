@@ -110,7 +110,7 @@ def Update(vhost):
 	# 4. make sure docroot exists
 	if not os.path.exists(fnDocRoot(vhost)):
 		os.mkdir(fnDocRoot(vhost))
-		os.chown(fnDocRoot(vhost), int(pw.pw_uid), 999)
+		os.chown(fnDocRoot(vhost), int(pw.pw_uid), 990)
 	# 5. activate new configuration
 	r = Apache2CtlGraceful()
 	if r:
