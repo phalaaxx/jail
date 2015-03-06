@@ -36,7 +36,7 @@ def ChrootUpgrade():
 		'apt-get', '-y', 'upgrade'])
 
 # setup jail groups
-def SetupGroups():
+def GroupsSetup():
 	DefaultGroups = (
 		('jail',		990),
 		('jailtpe',		991),

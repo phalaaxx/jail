@@ -20,7 +20,7 @@ if __name__ == '__main__':
 	parser.add_argument('-l', '--list', action='store_true', help='List mounted user jails')
 	parser.add_argument('--chroot-setup', action='store_true', help='Setup chroot environment with debootstrap')
 	parser.add_argument('--chroot-upgrade', action='store_true', help='Update and upgrade chroot environment')
-	parser.add_argument('--setup-groups', action='store_true', help='Create jail groups')
+	parser.add_argument('--groups-setup', action='store_true', help='Create jail groups')
 	args = parser.parse_args()
 	if args.update:
 		print 'UpdateGroup()'
@@ -44,8 +44,8 @@ if __name__ == '__main__':
 		print 'ChrootUpgrade()'
 		setup.ChrootUpdate()
 		setup.ChrootUpgrade()
-	elif args.setup_groups:
-		print 'SetupGroups()'
-		setup.SetupGroups()
+	elif args.groups_setup:
+		print 'GroupsSetup()'
+		setup.GroupsSetup()
 	elif args.list:
 		print '\n'.join(mount.List())
