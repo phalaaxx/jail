@@ -9,7 +9,7 @@ Installation
 
 Install mandatory packages. At the very least we need git libpam-chroot to install software and confine ssh users to their jails.
 
-	apt-get install git libpam-chroot debootstrap
+	apt-get install git libpam-chroot debootstrap apache2 libapache2-mod-fcgid libapache2-mod-evasive mysql-server
 
 Fetch jail code and make necessary links.
 
@@ -18,11 +18,19 @@ Fetch jail code and make necessary links.
 	ln -s /opt/jail/jctl /usr/local/bin
 	ln -s /opt/jail/jail /usr/lib/python2.7/dist-packages
 	ln -s /opt/jail/etc/init.d/jail /etc/init.d
+	ln -s /opt/jail/etc/apache2/conf-available/jail.conf /etc/apache2/conf-available
 
 Enable jail init script. This script is used to bind-mount jail directories at boot time and umount them before shutdown.
 
 	update-rc.d jail defaults
 	update-rc.d jail enable
+
+Enable apache configuration:
+
+	a2enmod actions
+	a2enmod userdir
+	a2enconf jail
+	/etc/init.d/apache2 restart
 
 Make necessary directories.
 
@@ -190,15 +198,6 @@ Download, compile and install gradm2:
 	cd gradm2
 	make
 	make install
-
-
-Apache
-------
-
-Install necessary apache and related packages.
-
-	apt-get install apache2 libapache2-mod-fcgid libapache2-mod-evasive mysql-server
-	a2enmod userdir
 
 
 Patch and compile suexec
