@@ -8,7 +8,7 @@ if __name__ == '__main__':
 	from jail import mysql
 	from jail import apache
 	from jail import backup
-	from jail import chroot
+	from jail import setup
 	import argparse
 
 	parser = argparse.ArgumentParser(description='Jail utilities')
@@ -38,10 +38,10 @@ if __name__ == '__main__':
 		mount.Umount(args.umount)
 	elif args.chroot_setup:
 		print 'ChrootSetup()'
-		chroot.Setup()
+		setup.ChrootSetup()
 	elif args.chroot_upgrade:
 		print 'ChrootUpgrade()'
-		chroot.Update()
-		chroot.Upgrade()
+		setup.ChrootUpdate()
+		setup.ChrootUpgrade()
 	elif args.list:
 		print '\n'.join(mount.List())

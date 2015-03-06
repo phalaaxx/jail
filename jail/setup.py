@@ -8,7 +8,7 @@ DefaultPackages = [
 	'php5-gd']
 
 # setup a chroot environment
-def Setup():
+def ChrootSetup():
 	ArchType = {
 		'i386'		: 'i386',
 		'x86_64'	: 'amd64'}
@@ -21,14 +21,14 @@ def Setup():
 		'http://ftp.debian.org/debian/'])
 
 # update chroot environment
-def Update():
+def ChrootUpdate():
 	return call([
 		'/usr/sbin/chroot',
 		'/jail/base',
 		'apt-get', 'update'])
 	
 # upgrade chroot environment
-def Upgrade():
+def ChrootUpgrade():
 	return call([
 		'/usr/sbin/chroot',
 		'/jail/base',
