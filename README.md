@@ -3,6 +3,13 @@ About
 
 This is a set of tools that can be used to create, enable or disable chroot jails for web and shell hosting purposes.
 
+Requirements
+------------
+
+In order to jail tools it is necessary to have a server with Debian Jessie installed. It is also required to replace systemd with sysvinit since systemd makes a spectacular mess with bind mounts:
+
+	apt-get install sysvinit sysvinit-core
+	reboot
 
 Installation
 ------------
