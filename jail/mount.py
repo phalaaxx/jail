@@ -36,6 +36,7 @@ def Mount(username, group='jail'):
 	if username not in grp.getgrnam(group).gr_mem:
 		raise 'User not in group %s' % group
 	if pwd.getpwnam(username) and username not in UserMounts:
+		print 'Mount(%s)' % username
 		for source, target, fstype, flags, options in MountPoints:
 			libc.mount(
 				source.format(username),
@@ -59,6 +60,7 @@ def Umount(username, group='jail'):
 	if username not in grp.getgrnam(group).gr_mem:
 		raise 'User not in group %s' % group
 	if username in UserMounts:
+		print 'Umount(%s)' % username
 		for _, target, _, _, _ in MountPoints:
 			libc.umount2(target.format(username), 2)
 		UserMounts.remove(username)
