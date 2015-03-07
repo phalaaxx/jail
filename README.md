@@ -11,14 +11,12 @@ Install mandatory packages. At the very least we need git libpam-chroot to insta
 
 	apt-get install git libpam-chroot debootstrap apache2 libapache2-mod-fcgid libapache2-mod-evasive mysql-server
 
-Fetch jail code and make necessary links.
+Fetch jail code and make necessary links and groups.
 
 	cd /opt
 	git clone https://github.com/phalaaxx/jail
-	ln -s /opt/jail/jctl /usr/local/bin
-	ln -s /opt/jail/jail /usr/lib/python2.7/dist-packages
-	ln -s /opt/jail/etc/init.d/jail /etc/init.d
-	ln -s /opt/jail/etc/apache2/conf-available/jail.conf /etc/apache2/conf-available
+	/opt/jail/jctl --symlinks-setup
+	/opt/jail/jctl --groups-setup
 
 Enable jail init script. This script is used to bind-mount jail directories at boot time and umount them before shutdown.
 
@@ -35,10 +33,6 @@ Enable apache configuration:
 Make necessary directories.
 
 	mkdir -p /jail/{base,root,home}
-
-Create the jail, jailtpe and jailsocket groups.
-
-	jctl --groups-setup
 
 Download chroot environment and install additional software within the chroot environment:
 

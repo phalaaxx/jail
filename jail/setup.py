@@ -1,6 +1,8 @@
 from platform import machine
 from subprocess import call
 from grp import getgrall
+from os import symlink
+from os.path import exists, isdir, islink, dirname
 
 # packages to install in chroot environment
 DefaultPackages = [
@@ -60,3 +62,20 @@ def GroupsSetup():
 			DefaultGroup])
 		if not groupadd:
 			print 'Created group %s with id %d' % (DefaultGroup, DefaultGroupID)
+
+
+# make initial symlinks setup
+def SymLinksSetup():
+	DefaultLinks = (
+		('/opt/jail/jctl',                                 '/usr/local/bin/jctl'),
+		('/opt/jail/jail',                                 '/usr/lib/python2.7/dist-packages/jail'),
+		('/opt/jail/etc/init.d/jail',                      '/etc/init.d/jail'),
+		('/opt/jail/etc/apache2/conf-available/jail.conf', '/etc/apache2/conf-available/jail.conf'))
+
+	for src, dst in DefaultLinks:
+		if isdir(dirname(dst)):
+			if exists(dst):
+				print 'File exists: %s' % dst
+				continue
+			symlink(src, dst)
+			print '%s -> %s' % (src, dst)
