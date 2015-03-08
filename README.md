@@ -6,7 +6,7 @@ This is a set of tools that can be used to create, enable or disable chroot jail
 Requirements
 ------------
 
-In order to jail tools it is necessary to have a server with Debian Jessie installed. It is also required to replace systemd with sysvinit since systemd makes a spectacular mess with bind mounts:
+In order for jail tools to work it is necessary to have a server with Debian Wheezy or Debian Jessie installed. In the case of Debian Jessie it is also required to replace systemd with sysvinit since systemd makes a spectacular mess with bind mounts:
 
 	apt-get install sysvinit sysvinit-core
 	reboot
