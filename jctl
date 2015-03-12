@@ -10,6 +10,7 @@ if __name__ == '__main__':
 	from jail import backup
 	from jail import setup
 	from jail import build
+	from jail import chroot
 	import argparse
 
 	parser = argparse.ArgumentParser(description='Jail utilities')
@@ -20,8 +21,7 @@ if __name__ == '__main__':
 	parser.add_argument('-u', '--umount', metavar='USER', help='Umount single user jail directories')
 	parser.add_argument('-l', '--list', action='store_true', help='List mounted user jails')
 	parser.add_argument('--symlinks-setup', action='store_true', help='Create initial symlinks')
-	parser.add_argument('--chroot-setup', action='store_true', help='Setup chroot environment with debootstrap')
-	parser.add_argument('--chroot-upgrade', action='store_true', help='Update and upgrade chroot environment')
+	parser.add_argument('--chroot-update', action='store_true', help='Setup chroot environment')
 	parser.add_argument('--groups-setup', action='store_true', help='Create jail groups')
 	parser.add_argument('--build-suphp', action='store_true', help='Build suphp wrapper')
 	args = parser.parse_args()
@@ -38,13 +38,11 @@ if __name__ == '__main__':
 		mount.Umount(args.umount)
 	elif args.symlinks_setup:
 		setup.SymLinksSetup()
-	elif args.chroot_setup:
-		print 'ChrootSetup()'
-		setup.ChrootSetup()
-	elif args.chroot_upgrade:
-		print 'ChrootUpgrade()'
-		setup.ChrootUpdate()
-		setup.ChrootUpgrade()
+	elif args.chroot_update:
+		print 'ChrootUpdate()'
+		chroot.MakeBase()
+		chroot.TouchEmptyFiles(chroot.ChrootJailTouch)
+		chroot.CopyJailFiles(chroot.ChrootJailCopy)
 	elif args.groups_setup:
 		print 'GroupsSetup()'
 		setup.GroupsSetup()
