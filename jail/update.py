@@ -1,7 +1,14 @@
 import os
 import pwd
 import grp
+from os.path import exists, isdir
+from os.path import join, dirname
+from os import makedirs, walk
+from os import link
 
+
+# constants
+JailBase = '/jail/base'
 
 # update pam_chroot configuration
 def UpdateChroot(group='jail'):
@@ -27,34 +34,63 @@ def UpdateUser(user):
 				yield ':'.join(map(str, gr))
 
 	JailDirectories = (
-		('/home/{0}',				True,		00750),
-		('/jail/backup/{0}',			False,		00750),
-		('/jail/root/{0}',			False,		00755),
-		('/jail/home/{0}',			False,		00750),
-		('/jail/home/{0}/etc',			False,		00755),
-		('/jail/home/{0}/var',			False,		00755),
-		('/jail/home/{0}/var/log',		False,		00755),
-		('/jail/home/{0}/run',			False,		00755),
-		('/jail/home/{0}/tmp',			False,		01777),
-		('/jail/home/{0}/home',			False,		00755),
-		('/jail/home/{0}/home/{0}',		True,		00750),
-		('/jail/home/{0}/home/{0}/logs',	True,		00755),
-		('/jail/home/{0}/home/{0}/public_html',	True,		00750),
-		('/jail/home/{0}/home/{0}/mail',	True,		00750),
-		('/var/log/apache2/hosting/{0}',	False,		00755),
+		('/home/{0}',                           True,  00750),
+		('/jail/backup/{0}',                    False, 00750),
+		('/jail/root/{0}',                      False, 00755),
+		('/jail/home/{0}',                      False, 00750),
+		('/jail/home/{0}/etc',                  False, 00755),
+		('/jail/home/{0}/var',                  False, 00755),
+		('/jail/home/{0}/var/log',              False, 00755),
+		('/jail/home/{0}/run',                  False, 00755),
+		('/jail/home/{0}/tmp',                  False, 01777),
+		('/jail/home/{0}/home',                 False, 00755),
+		('/jail/home/{0}/home/{0}',             True,  00750),
+		('/jail/home/{0}/home/{0}/logs',        True,  00755),
+		('/jail/home/{0}/home/{0}/public_html', True,  00750),
+		('/jail/home/{0}/home/{0}/mail',        True,  00750),
+		('/var/log/apache2/hosting/{0}',        False, 00755),
 	)
 
+	# 2. create jail root
+	JailRoot = '/jail/root/{0}'.format(user)
+	if not exists(JailRoot):
+		makedirs(JailRoot)
+
+	for SrcPath, DirNames, FileNames in walk(JailBase):
+		RelPath = SrcPath[len(JailBase)+1:]
+
+		# make directories
+		for Dir in DirNames:
+			DstDir = join(JailRoot, RelPath, Dir)
+			if not isdir(DstDir):
+				makedirs(DstDir)
+
+		# copy hardlinks
+		for File in FileNames:
+			DstPath = join(JailRoot, RelPath)
+
+			# make sure destination directory exists
+			if not isdir(DstPath):
+				makedirs(DstPath)
+
+			SrcFile = join(SrcPath, File)
+			DstFile = join(DstPath, File)
+
+			# make a hard link
+			if not exists(DstFile):
+				link(SrcFile, DstFile)
+
 	# 3. create jail directories
-	for dirname, chown, mode in JailDirectories:
-		dirname = dirname.format(user)
-		if not os.path.exists(dirname):
-			os.makedirs(dirname)
+	for DirName, chown, mode in JailDirectories:
+		DirName = DirName.format(user)
+		if not os.path.exists(DirName):
+			os.makedirs(DirName)
 			if chown:
 				os.chown(
-					dirname,
+					DirName,
 					pwd.getpwnam(user).pw_uid,
 					pwd.getpwnam(user).pw_gid)
-		os.chmod(dirname, mode)
+		os.chmod(DirName, mode)
 
 	# 4. create empty files
 	for f in (os.path.join('/jail/home', user, 'var/log/wtmp'),
