@@ -12,11 +12,10 @@ MS_BIND = 4096
 
 # list of jail mount points
 MountPoints = (
-	('/jail/base',				'/jail/root/{0}',				None,	MS_BIND,	None),
 	('proc',				'/jail/root/{0}/proc',				'proc',	0,		'hidepid=2'),
+	('/dev',				'/jail/root/{0}/dev',			None,	MS_BIND,	None),
 	('/dev/pts',				'/jail/root/{0}/dev/pts',			None,	MS_BIND,	None),
 	('/jail/home/{0}/home',			'/jail/root/{0}/home',				None,	MS_BIND,	None),
-	('/var/log/apache2/hosting/{0}',	'/jail/root/{0}/home/{0}/logs',			None,	MS_BIND,	None),
 	('/jail/home/{0}/etc/passwd',		'/jail/root/{0}/etc/passwd',			None,	MS_BIND,	None),
 	('/jail/home/{0}/etc/group',		'/jail/root/{0}/etc/group',			None,	MS_BIND,	None),
 	('/jail/home/{0}/var/log/wtmp',		'/jail/root/{0}/var/log/wtmp',			None,	MS_BIND,	None),
@@ -28,7 +27,7 @@ MountPoints = (
 
 # load list of mounted users
 um_raw = map(lambda x: x.split(' ')[1].split('/'), open('/proc/mounts').readlines())
-UserMounts = set([x[3] for x in um_raw if len(x) == 4 and x[2] == 'root'])
+UserMounts = set([x[3] for x in um_raw if len(x) == 5 and x[2] == 'root' and x[4] == 'proc'])
 
 
 # do a bind mount
