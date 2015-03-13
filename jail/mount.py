@@ -50,7 +50,8 @@ def Mount(username, group='jail'):
 
 # mount all jail users
 def MountAll(group='jail'):
-	for user in grp.getgrnam(group).gr_mem:
+	users = set(grp.getgrnam(group).gr_mem)
+	for user in users.difference(UserMounts):
 		Mount(user, group)
 
 
