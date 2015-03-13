@@ -2,6 +2,7 @@ import os
 import ctypes
 import pwd
 import grp
+from sys import stdout
 
 
 # this is used to access syscalls
@@ -35,7 +36,6 @@ def Mount(username, group='jail'):
 	if username not in grp.getgrnam(group).gr_mem:
 		raise 'User not in group %s' % group
 	if pwd.getpwnam(username) and username not in UserMounts:
-		print 'Mount(%s)' % username
 		for source, target, fstype, flags, options in MountPoints:
 			libc.mount(
 				source.format(username),
@@ -50,9 +50,15 @@ def Mount(username, group='jail'):
 
 # mount all jail users
 def MountAll(group='jail'):
-	users = set(grp.getgrnam(group).gr_mem)
-	for user in users.difference(UserMounts):
+	users = set(grp.getgrnam(group).gr_mem).difference(UserMounts)
+	for i, user in zip(range(len(users)), users):
+		print '\r[ {0:5d}/{1:5d} ] Mount({2})'.format(
+			i+1,
+			len(users),
+			user),
+		stdout.flush()
 		Mount(user, group)
+	print
 
 
 # detach umount a target
@@ -60,7 +66,6 @@ def Umount(username, group='jail'):
 	if username not in grp.getgrnam(group).gr_mem:
 		raise 'User not in group %s' % group
 	if username in UserMounts:
-		print 'Umount(%s)' % username
 		for _, target, _, _, _ in MountPoints:
 			libc.umount2(target.format(username), 2)
 		UserMounts.remove(username)
@@ -70,9 +75,15 @@ def Umount(username, group='jail'):
 
 # umount all jail users
 def UmountAll(group='jail'):
-	users = set(grp.getgrnam(group).gr_mem)
-	for user in users.intersection(UserMounts):
+	users = set(grp.getgrnam(group).gr_mem).intersection(UserMounts)
+	for i, user in zip(range(len(users)), users):
+		print '\r[ {0:5d}/{1:5d} ] Umount({2})'.format(
+			i+1,
+			len(users),
+			user),
+		stdout.flush()
 		Umount(user, group)
+	print
 
 
 # list all mounted users

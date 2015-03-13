@@ -33,9 +33,11 @@ if __name__ == '__main__':
 	elif args.umount_all:
 		mount.UmountAll()
 	elif args.mount:
+		print 'Mount(%s)' % args.mount
 		mount.Mount(args.mount)
 	elif args.umount:
 		mount.Umount(args.umount)
+		print 'Umount(%s)' % args.umount
 	elif args.symlinks_setup:
 		setup.SymLinksSetup()
 	elif args.chroot_update:
