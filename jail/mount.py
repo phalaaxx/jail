@@ -69,7 +69,8 @@ def Umount(username, group='jail'):
 
 # umount all jail users
 def UmountAll(group='jail'):
-	for user in grp.getgrnam(group).gr_mem:
+	users = set(grp.getgrnam(group).gr_mem)
+	for user in users.intersection(UserMounts):
 		Umount(user, group)
 
 
