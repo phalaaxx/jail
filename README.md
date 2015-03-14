@@ -20,10 +20,10 @@ Install mandatory packages. At the very least we need git libpam-chroot to insta
 
 Fetch jail code and make necessary links and groups.
 
-	cd /opt
 	git clone https://github.com/phalaaxx/jail
-	/opt/jail/jctl --symlinks-setup
-	/opt/jail/jctl --groups-setup
+	cd jail
+	python setup.py install
+	jctl --groups-setup
 
 Enable jail init script. This script is used to bind-mount jail directories at boot time and umount them before shutdown.
 
