@@ -11,10 +11,14 @@ if __name__ == '__main__':
 	from jail import setup
 	from jail import build
 	from jail import chroot
+	from jail import user
 	import argparse
 
 	parser = argparse.ArgumentParser(description='Jail utilities')
-	parser.add_argument('--update', action='store_true', help='Update jail directories')
+	parser.add_argument('--update-user', metavar='USER', help='Update chroot jail environment for a user')
+	parser.add_argument('--update-all', action='store_true', help='Update chroot jails for all users')
+	parser.add_argument('--useradd', metavar='USER', help='Create a new system user')
+	parser.add_argument('--userdel', metavar='USER', help='Remove system user')
 	parser.add_argument('-M', '--mount-all', action='store_true', help='Mount all jail user directories')
 	parser.add_argument('-U', '--umount-all', action='store_true', help='Umount all jail user directories')
 	parser.add_argument('-m', '--mount', metavar='USER', help='Mount single user jail directories')
@@ -24,9 +28,19 @@ if __name__ == '__main__':
 	parser.add_argument('--groups-setup', action='store_true', help='Create jail groups')
 	parser.add_argument('--build-suphp', action='store_true', help='Build suphp wrapper')
 	args = parser.parse_args()
-	if args.update:
-		print 'UpdateGroup()'
+	if args.update_all:
+		print 'UpdateAll()'
 		update.UpdateGroup()
+	elif args.update_user:
+		print 'UpdateUser(%s)' % args.update_user
+		user.UpdateUserJail(args.update_user)
+	elif args.useradd:
+		print 'UserAdd(%s)' % args.useradd
+		user.UserAdd(args.useradd)
+	elif args.userdel:
+		print 'UserDel(%s)' % args.userdel
+		mount.Umount(args.userdel)
+		user.UserDel(args.userdel)
 	elif args.mount_all:
 		mount.MountAll()
 	elif args.umount_all:
@@ -40,7 +54,6 @@ if __name__ == '__main__':
 	elif args.chroot_update:
 		print 'ChrootUpdate()'
 		chroot.MakeBase()
-		chroot.TouchEmptyFiles(chroot.ChrootJailTouch)
 		chroot.CopyJailFiles(chroot.ChrootJailCopy)
 	elif args.groups_setup:
 		print 'GroupsSetup()'

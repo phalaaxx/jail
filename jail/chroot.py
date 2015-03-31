@@ -34,16 +34,6 @@ ChrootJailCopy = [
 	'/usr/lib/php5']
 
 
-# list of files to touch
-ChrootJailTouch = [
-	('etc/passwd',   0644, True),
-	('etc/group',    0644, True),
-	('var/log/wtmp', 0664, True),
-	('run/utmp',     0664, True),
-	('home',         0750, False),
-	('tmp',          1777, False)]
-
-
 # get all libraries used by binary
 def GetLibDeps(LibDeps=[]):
 	p = Popen(
@@ -143,21 +133,6 @@ def MakeBase(Dest='/jail/base'):
 			mknod(DevFile, Mode|S_IFCHR, makedev(Major, Minor))
 
 
-# create/touch empty files
-def TouchEmptyFiles(ChrootJailTouch, Dest='/jail/base'):
-	for File, Mode, IsFile in ChrootJailTouch:
-		Target = join(Dest, File)
-		if not isdir(dirname(Target)):
-			makedirs(dirname(Target))
-		if not IsFile:
-			if not isdir(Target):
-				makedirs(Target)
-				chmod(Target, Mode)
-		if not exists(Target):
-			open(Target, 'w+').close()
-			chmod(Target, Mode)
-
-
 # copy all files and directories from the list specified
 def CopyJailFiles(ChrootJailCopy, Dest='/jail/base'):
 	for Target in ChrootJailCopy:
@@ -170,5 +145,4 @@ def CopyJailFiles(ChrootJailCopy, Dest='/jail/base'):
 # main program
 if __name__ == '__main__':
 	MakeBase()
-	TouchEmptyFiles(ChrootJailTouch)
 	CopyJailFiles(ChrootJailCopy)
