@@ -6,6 +6,7 @@ from os.path import join, dirname
 from os import makedirs, walk
 from os import link
 
+from jail.user import UpdateUserJail
 
 # constants
 JailBase = '/jail/base'
@@ -108,6 +109,9 @@ def UpdateUser(user):
 	group_path = os.path.join('/jail/home', user, 'etc/group')
 	open(group_path, 'w+').write('\n'.join(filterGroups(user))+'\n')
 	os.chmod(group_path, 0644)
+
+	# 7. update user jail
+	UpdateUserJail(user)
 
 
 # update all jail user directories
