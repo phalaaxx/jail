@@ -29,7 +29,7 @@ UserMounts = set([x[3] for x in um_raw if len(x) == 5 and x[2] == 'root' and x[4
 
 
 # do a bind mount
-def Mount(username, group='jail'):
+def doMount(username, group='jail'):
 	if username not in grp.getgrnam(group).gr_mem:
 		raise 'User not in group %s' % group
 	if pwd.getpwnam(username) and username not in UserMounts:
@@ -45,6 +45,13 @@ def Mount(username, group='jail'):
 	return False
 
 
+# mount user and configure fpm
+def Mount(username, group='jail'):
+	ret = doMount(username, group)
+	ConfigureAll(UserMounts, group)
+	return ret
+
+
 # mount all jail users
 def MountAll(group='jail'):
 	users = set(grp.getgrnam(group).gr_mem).difference(UserMounts)
@@ -54,13 +61,13 @@ def MountAll(group='jail'):
 			len(users),
 			user),
 		stdout.flush()
-		Mount(user, group)
+		doMount(user, group)
 	ConfigureAll(UserMounts, group)
 	print
 
 
 # detach umount a target
-def Umount(username, group='jail'):
+def doUmount(username, group='jail'):
 	if username not in grp.getgrnam(group).gr_mem:
 		raise 'User not in group %s' % group
 	if username in UserMounts:
@@ -69,6 +76,13 @@ def Umount(username, group='jail'):
 		UserMounts.remove(username)
 		return True
 	return False
+
+
+# umount user and configure fpm
+def Umount(username, group='jail'):
+	ret = doUmount(username, group)
+	ConfigureAll(UserMounts, group)
+	return ret
 
 
 # umount all jail users
@@ -80,7 +94,7 @@ def UmountAll(group='jail'):
 			len(users),
 			user),
 		stdout.flush()
-		Umount(user, group)
+		doUmount(user, group)
 	ConfigureAll(UserMounts, group)
 	print
 
