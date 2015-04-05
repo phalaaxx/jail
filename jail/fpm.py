@@ -1,5 +1,6 @@
 from subprocess import call
 from os.path import exists
+from os.path import isdir
 from os.path import join
 from os import makedirs
 from os import unlink
@@ -51,6 +52,9 @@ def fpmReload():
 
 # create php5-fpm configuration file for user specified
 def fpmConfigureUser(User, MaxChildren=15, Servers=2, MinSpares=1, MaxSpares=3):
+	if not isdir('/var/run/php5-fpm'):
+		makedirs('/var/run/php5-fpm')
+
 	if not exists(fpmFile(User)):
 		with open(fpmFile(User), 'w+') as fh:
 			fh.write(
