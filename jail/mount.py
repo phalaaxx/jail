@@ -4,7 +4,7 @@ import pwd
 import grp
 from sys import stdout
 
-from fpm import ConfigureAll
+from fpm import fpmConfigureAll
 
 
 # this is used to access syscalls
@@ -48,7 +48,7 @@ def doMount(username, group='jail'):
 # mount user and configure fpm
 def Mount(username, group='jail'):
 	ret = doMount(username, group)
-	ConfigureAll(UserMounts, group)
+	fpmConfigureAll(UserMounts, group)
 	return ret
 
 
@@ -62,7 +62,7 @@ def MountAll(group='jail'):
 			user),
 		stdout.flush()
 		doMount(user, group)
-	ConfigureAll(UserMounts, group)
+	fpmConfigureAll(UserMounts, group)
 	print
 
 
@@ -81,7 +81,7 @@ def doUmount(username, group='jail'):
 # umount user and configure fpm
 def Umount(username, group='jail'):
 	ret = doUmount(username, group)
-	ConfigureAll(UserMounts, group)
+	fpmConfigureAll(UserMounts, group)
 	return ret
 
 
@@ -95,7 +95,7 @@ def UmountAll(group='jail'):
 			user),
 		stdout.flush()
 		doUmount(user, group)
-	ConfigureAll(UserMounts, group)
+	fpmConfigureAll(UserMounts, group)
 	print
 
 

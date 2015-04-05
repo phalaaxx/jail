@@ -73,7 +73,7 @@ def fpmDeconfigureUser(User):
 
 
 # configure all user fpm pools
-def ConfigureAll(UserMounts, group='jail'):
+def fpmConfigureAll(UserMounts, group='jail'):
 	for user in getgrnam(group).gr_mem:
 		if user in UserMounts:
 			fpmConfigureUser(user)
