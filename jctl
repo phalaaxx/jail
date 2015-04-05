@@ -6,7 +6,6 @@ if __name__ == '__main__':
 	from jail import mount
 	from jail import vhost
 	from jail import mysql
-	from jail import apache
 	from jail import backup
 	from jail import setup
 	from jail import build

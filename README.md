@@ -16,7 +16,7 @@ Installation
 
 Install mandatory packages. At the very least we need git libpam-chroot to install software and confine ssh users to their jails.
 
-	apt-get install git libpam-chroot debootstrap apache2 libapache2-mod-fcgid libapache2-mod-evasive mysql-server
+	apt-get install git libpam-chroot debootstrap nginx php5-fpm mysql-server
 
 Fetch jail code and make necessary links and groups.
 
@@ -29,13 +29,6 @@ Enable jail init script. This script is used to bind-mount jail directories at b
 
 	update-rc.d jail defaults
 	update-rc.d jail enable
-
-Enable apache configuration:
-
-	a2enmod actions
-	a2enmod userdir
-	a2enconf jail
-	/etc/init.d/apache2 restart
 
 Make necessary directories.
 
@@ -201,60 +194,6 @@ Download, compile and install gradm2:
 	make install
 
 
-Patch and compile suexec
-------------------------
-
-This step is optional. It is necessary if you are planning to run cgi and fcgi scripts in jail environment.
-First fetch sources and build dependencies.
-
-	mkdir /usr/src/suexec
-	cd /usr/src/suexec
-	apt-get source apache2-suexec
-	apt-get build-dep apache2-suexec
-	cd apache2-2.4.10
-
-Patch the code. Edit _support/suexec.c_ file and add the following code before _setgid_ and _setuid_.
-
-	    /*
-	     * chroot to jail directory
-	     */
-	    char suexec_chroot[AP_MAXPATH];
-	    char suexec_cwd[AP_MAXPATH];
-	    if (getcwd(suexec_cwd, AP_MAXPATH) == NULL) {
-	        log_err("cannot get current working directory: %s\n",
-	                strerror(errno));
-	        exit(301);
-	    }
-	    snprintf(suexec_chroot, AP_MAXPATH, "/jail/root/%s", pw->pw_name);
-	    if (chroot(suexec_chroot)<0) {
-	        log_err("cannot chroot to jail directory %s: %s\n",
-	                suexec_chroot, strerror(errno));
-	        exit(302);
-	    }
-	    if (chdir(suexec_cwd) != 0) {
-	        log_err("cannot change directory to %s: %s\n",
-	                suexec_cwd, strerror(errno));
-	        exit(303);
-	    }
-
-Edit _debian/rules_ file and change default docroot to _/home_. Finally commit changes and build package.
-
-	dpkg-source --commit
-	dpkg-buildpackage
-
-After a while the new packages set will be compiled. Install the appropriate package and make sure suexec binary is suid.
-
-	cd /usr/src/suexec
-	dpkg -i apache2-suexec-pristine_2.4.10-9_amd64.deb
-	chmod +s /usr/lib/apache2/suexec-pristine
-
-One last thing to do is to prevent package system from updating _apache2-suexec_ package.
-
-	apt-mark hold apache2-suexec-pristine
-
-From now on cgi and fcgi binaries should be started within chroot jail in /jail/root/username directories. Of course, this will only work for mounted jails.
-
-
 Usage
 -----
 
@@ -276,17 +215,29 @@ Update and mount jail directories.
 Sample vhost
 ------------
 
-In order to make virtual hosts confined inside chroot jails, use configuration similar to this.
+In order to make virtual hosts confined inside chroot jails, use nginx configuration similar to this.
 
-	<VirtualHost *:80>
-	        ServerAdmin webmaster@example.com
-	        ServerName test.example.com
-	        DocumentRoot /home/test@example.com/public_html/jtest_vhost_root
-	        SuexecUserGroup "test@example.com" "test@example.com"
-	        LogLevel warn
-	        ErrorLog ${APACHE_LOG_DIR}/error.log
-	        CustomLog ${APACHE_LOG_DIR}/access.log vhost_combined
-	</VirtualHost>
+
+	server {
+		listen 80;
+
+		root /home/test@example.com/public_html;
+		index index.php index.html;
+
+		server_name test.example.com;
+
+		location / {
+			try_files $uri $uri/;
+		}
+
+		location ~ \.php$ {
+			fastcgi_split_path_info ^(.+\.php)(/.+)$;
+			fastcgi_pass unix:/var/run/php5-fpm/test@example.com.sock;
+			fastcgi_index index.php;
+			fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
+			include fastcgi_params;
+		}
+	}
 
 
 LICENSE

@@ -4,6 +4,8 @@ import pwd
 import grp
 from sys import stdout
 
+from fpm import ConfigureAll
+
 
 # this is used to access syscalls
 libc = ctypes.CDLL('libc.so.6')
@@ -53,6 +55,7 @@ def MountAll(group='jail'):
 			user),
 		stdout.flush()
 		Mount(user, group)
+	ConfigureAll(UserMounts, group)
 	print
 
 
@@ -78,6 +81,7 @@ def UmountAll(group='jail'):
 			user),
 		stdout.flush()
 		Umount(user, group)
+	ConfigureAll(UserMounts, group)
 	print
 
 

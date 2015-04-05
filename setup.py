@@ -11,6 +11,5 @@ setup(
     license          = 'BSD',
     data_files       = [
         ('/usr/sbin',                   ['sbin/jctl']),
-        ('/etc/init.d',                 ['etc/init.d/jail']),
-        ('/etc/apache2/conf-available', ['etc/apache2/conf-available/jail.conf'])],
+        ('/etc/init.d',                 ['etc/init.d/jail'])],
 )
