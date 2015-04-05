@@ -1,14 +1,13 @@
-import os
-import ctypes
-import pwd
-import grp
+from ctypes import CDLL
+from pwd import getpwnam
+from grp import getgrnam
 from sys import stdout
 
-from fpm import fpmConfigureAll
+from jail.fpm import fpmConfigureAll
 
 
 # this is used to access syscalls
-libc = ctypes.CDLL('libc.so.6')
+libc = CDLL('libc.so.6')
 
 # mount options
 MS_BIND = 4096
@@ -30,9 +29,9 @@ UserMounts = set([x[3] for x in um_raw if len(x) == 5 and x[2] == 'root' and x[4
 
 # do a bind mount
 def doMount(username, group='jail'):
-	if username not in grp.getgrnam(group).gr_mem:
+	if username not in getgrnam(group).gr_mem:
 		raise 'User not in group %s' % group
-	if pwd.getpwnam(username) and username not in UserMounts:
+	if getpwnam(username) and username not in UserMounts:
 		for source, target, fstype, flags, options in MountPoints:
 			libc.mount(
 				source.format(username),
@@ -54,7 +53,7 @@ def Mount(username, group='jail'):
 
 # mount all jail users
 def MountAll(group='jail'):
-	users = set(grp.getgrnam(group).gr_mem).difference(UserMounts)
+	users = set(getgrnam(group).gr_mem).difference(UserMounts)
 	for i, user in zip(range(len(users)), users):
 		print '\r[ {0:5d}/{1:5d} ] Mount({2})'.format(
 			i+1,
@@ -68,7 +67,7 @@ def MountAll(group='jail'):
 
 # detach umount a target
 def doUmount(username, group='jail'):
-	if username not in grp.getgrnam(group).gr_mem:
+	if username not in getgrnam(group).gr_mem:
 		raise 'User not in group %s' % group
 	if username in UserMounts:
 		for _, target, _, _, _ in MountPoints:
@@ -87,7 +86,7 @@ def Umount(username, group='jail'):
 
 # umount all jail users
 def UmountAll(group='jail'):
-	users = set(grp.getgrnam(group).gr_mem).intersection(UserMounts)
+	users = set(getgrnam(group).gr_mem).intersection(UserMounts)
 	for i, user in zip(range(len(users)), users):
 		print '\r[ {0:5d}/{1:5d} ] Umount({2})'.format(
 			i+1,
