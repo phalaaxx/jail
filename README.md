@@ -218,17 +218,26 @@ Sample vhost
 In order to make virtual hosts confined inside chroot jails, use nginx configuration similar to this.
 
 
+	jctl --vhost-json << EOF
+	{
+		"UserName"      : "test@example.com",
+		"vhosts": [
+			{
+				"Name"  : "test.example.com",
+				"Aliases" : []
+			}
+		]
+	}
+	EOF
+
+The above command will generate a configuration file /etc/nginx/sites-enabled/test@example.com.conf like this:
+
 	server {
 		listen 80;
 
 		root /home/test@example.com/public_html;
-		index index.php index.html;
-
 		server_name test.example.com;
-
-		location / {
-			try_files $uri $uri/;
-		}
+		index index.php index.html;
 
 		location ~ \.php$ {
 			fastcgi_split_path_info ^(.+\.php)(/.+)$;
