@@ -7,7 +7,7 @@ if __name__ == '__main__':
 
 	from jail import update
 	from jail import mount
-	from jail import vhost
+	from jail import nginx
 	from jail import mysql
 	from jail import backup
 	from jail import setup
@@ -60,7 +60,7 @@ if __name__ == '__main__':
 		print 'GroupsSetup()'
 		setup.GroupsSetup()
 	elif args.vhost_json:
-		vhost.UpdateNginxConf(
+		nginx.UpdateNginxConf(
 			loads(stdin.read()))
 	elif args.list:
 		print '\n'.join(mount.List())
