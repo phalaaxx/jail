@@ -8,7 +8,6 @@ if __name__ == '__main__':
 	from jail import mysql
 	from jail import backup
 	from jail import setup
-	from jail import build
 	from jail import chroot
 	from jail import user
 	import argparse
@@ -25,7 +24,6 @@ if __name__ == '__main__':
 	parser.add_argument('-l', '--list', action='store_true', help='List mounted user jails')
 	parser.add_argument('--chroot-update', action='store_true', help='Setup chroot environment')
 	parser.add_argument('--groups-setup', action='store_true', help='Create jail groups')
-	parser.add_argument('--build-suphp', action='store_true', help='Build suphp wrapper')
 	args = parser.parse_args()
 	if args.update_all:
 		print 'UpdateAll()'
@@ -57,7 +55,5 @@ if __name__ == '__main__':
 	elif args.groups_setup:
 		print 'GroupsSetup()'
 		setup.GroupsSetup()
-	elif args.build_suphp:
-		build.SuphpWrapper()
 	elif args.list:
 		print '\n'.join(mount.List())
