@@ -1,4 +1,6 @@
 from os.path import join
+from os.path import exists
+from os import unlink
 from json import loads
 from jinja2 import Template
 
@@ -31,3 +33,9 @@ def UpdateNginxConf(VhostData):
 	template = Template(VhostsTemplate)
 	with open(fnConfigFile(VhostData.get('UserName')), 'w+') as fh:
 		fh.write(template.render(**VhostData))
+
+
+# remove user's nginx configuration
+def RemoveNginxConf(user):
+	if exists(fnConfigFile(user)):
+		unlink(fnConfigFile(user))
