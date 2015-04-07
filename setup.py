@@ -10,6 +10,6 @@ setup(
     packages         = ['jail'],
     license          = 'BSD',
     data_files       = [
-        ('/usr/sbin',                   ['sbin/jctl']),
+        ('/usr/sbin',                   ['sbin/jctl', 'sbin/juser']),
         ('/etc/init.d',                 ['etc/init.d/jail'])],
 )

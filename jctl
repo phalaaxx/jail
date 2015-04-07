@@ -2,56 +2,14 @@
 
 # main program
 if __name__ == '__main__':
-	from sys import stdin
-	from json import loads
-
-	from jail import update
-	from jail import mount
-	from jail import nginx
-	from jail import mysql
-	from jail import backup
 	from jail import setup
 	from jail import chroot
-	from jail import user
 	import argparse
 
 	parser = argparse.ArgumentParser(description='Jail utilities')
-	parser.add_argument('--update-user', metavar='USER', help='Update chroot jail environment for a user')
-	parser.add_argument('--update-all', action='store_true', help='Update chroot jails for all users')
-	parser.add_argument('--useradd', metavar='USER', help='Create a new system user')
-	parser.add_argument('--userdel', metavar='USER', help='Remove system user')
-	parser.add_argument('-M', '--mount-all', action='store_true', help='Mount all jail user directories')
-	parser.add_argument('-U', '--umount-all', action='store_true', help='Umount all jail user directories')
-	parser.add_argument('-m', '--mount', metavar='USER', help='Mount single user jail directories')
-	parser.add_argument('-u', '--umount', metavar='USER', help='Umount single user jail directories')
-	parser.add_argument('-l', '--list', action='store_true', help='List mounted user jails')
 	parser.add_argument('--chroot-update', action='store_true', help='Setup chroot environment')
 	parser.add_argument('--groups-setup', action='store_true', help='Create jail groups')
-	parser.add_argument('--vhost-json', action='store_true', help='Create vhosts configuration from json data')
 	args = parser.parse_args()
-	if args.update_all:
-		print 'UpdateAll()'
-		update.UpdateGroup()
-	elif args.update_user:
-		print 'UpdateUser(%s)' % args.update_user
-		user.UpdateUserJail(args.update_user)
-	elif args.useradd:
-		print 'UserAdd(%s)' % args.useradd
-		user.UserAdd(args.useradd)
-	elif args.userdel:
-		print 'UserDel(%s)' % args.userdel
-		mount.Umount(args.userdel)
-		user.UserDel(args.userdel)
-	elif args.mount_all:
-		mount.MountAll()
-	elif args.umount_all:
-		mount.UmountAll()
-	elif args.mount:
-		print 'Mount(%s)' % args.mount
-		mount.Mount(args.mount)
-	elif args.umount:
-		mount.Umount(args.umount)
-		print 'Umount(%s)' % args.umount
 	elif args.chroot_update:
 		print 'ChrootUpdate()'
 		chroot.MakeBase()
@@ -59,8 +17,3 @@ if __name__ == '__main__':
 	elif args.groups_setup:
 		print 'GroupsSetup()'
 		setup.GroupsSetup()
-	elif args.vhost_json:
-		nginx.UpdateNginxConf(
-			loads(stdin.read()))
-	elif args.list:
-		print '\n'.join(mount.List())

@@ -199,7 +199,8 @@ Usage
 
 In order to start using chroot jails you need some users in the jail group.
 
-	useradd -G jail -s /bin/bash test@example.com
+	juser --useradd test@example.com
+	passwd test@example.com
 
 It is also necessary to add www-data user to the new user's group:
 
@@ -207,9 +208,9 @@ It is also necessary to add www-data user to the new user's group:
 	
 Update and mount jail directories.
 
-	jctl --update
-	jctl --mount test@example.com
-	jctl --list
+	juser --update
+	juser --mount test@example.com
+	juser --list
 
 
 Sample vhost
@@ -218,7 +219,7 @@ Sample vhost
 In order to make virtual hosts confined inside chroot jails, use nginx configuration similar to this.
 
 
-	jctl --vhost-json << EOF
+	juser --vhost-json << EOF
 	{
 		"UserName"      : "test@example.com",
 		"vhosts": [
