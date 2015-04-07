@@ -10,15 +10,14 @@ VhostsTemplate = '''
 
 	root /home/{{UserName}}/public_html;
 	server_name {{vhost.Name}}{% if vhost.Aliases %}{% for alias in vhost.Aliases %} {{ alias }}{% endfor %}{% endif %};
-	index index.php index.html index.htm;
+	index index.php index.html;
 
 	location ~ \.php$ {
-		fastcgi_split_path_info ^(.+\.php)(/.+)$;
-		fastcgi_pass unix:/var/run/php5-fpm/{{UserName}}.sock;
-		fastcgi_index index.php;
-		fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
-		include fastcgi_params;
+		include uwsgi_params;
+		uwsgi_modifier1 14;
+		uwsgi_pass unix:///jail/root/{{UserName}}/run/uwsgi/app/php-uwsgi.sock;
 	}
+
 }
 {% endfor %}
 '''

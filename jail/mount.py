@@ -3,7 +3,7 @@ from pwd import getpwnam
 from grp import getgrnam
 from sys import stdout
 
-from jail.fpm import fpmConfigureAll
+from jail.uwsgi import uwsgiConfigureAll
 
 
 # this is used to access syscalls
@@ -44,10 +44,10 @@ def doMount(username, group='jail'):
 	return False
 
 
-# mount user and configure fpm
+# mount user and configure uwsgi
 def Mount(username, group='jail'):
 	ret = doMount(username, group)
-	fpmConfigureAll(UserMounts, group)
+	uwsgiConfigureAll(UserMounts, group)
 	return ret
 
 
@@ -61,7 +61,7 @@ def MountAll(group='jail'):
 			user),
 		stdout.flush()
 		doMount(user, group)
-	fpmConfigureAll(UserMounts, group)
+	uwsgiConfigureAll(UserMounts, group)
 	print
 
 
@@ -77,10 +77,10 @@ def doUmount(username, group='jail'):
 	return False
 
 
-# umount user and configure fpm
+# umount user and configure uwsgi
 def Umount(username, group='jail'):
 	ret = doUmount(username, group)
-	fpmConfigureAll(UserMounts, group)
+	uwsgiConfigureAll(UserMounts, group)
 	return ret
 
 
@@ -94,7 +94,7 @@ def UmountAll(group='jail'):
 			user),
 		stdout.flush()
 		doUmount(user, group)
-	fpmConfigureAll(UserMounts, group)
+	uwsgiConfigureAll(UserMounts, group)
 	print
 
 
