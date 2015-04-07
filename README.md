@@ -16,7 +16,7 @@ Installation
 
 Install mandatory packages. At the very least we need git libpam-chroot to install software and confine ssh users to their jails.
 
-    apt-get install git libpam-chroot debootstrap nginx uwsgi uwsgi-core uwsgi-plugins-python uwsgi-plugins-php uwsgi-emperor mysql-server python-jinja2
+    apt-get install git libpam-chroot debootstrap nginx uwsgi uwsgi-core uwsgi-emperor uwsgi-plugins-python uwsgi-plugins-php uwsgi-emperor mysql-server python-jinja2
 
 Fetch jail code and make necessary links and groups.
 
